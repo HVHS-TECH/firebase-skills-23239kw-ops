@@ -17,39 +17,62 @@ const HTML_OUTPUT = document.getElementById("databaseOutput");
 // The ref('/') part tells the operation to write to the base level of the database "/"
 // This means it replaces the whole database with message:Hello World
 /**************************************************************/
+let user = 'Toe';
+let score = 99;
 function bludMax(){
   console.log("Running bludMax()")
-  firebase.database().ref('users/blud').set(
+  firebase.database().ref('/').set(
     {
-      message: 'Literally anything else',
-      age: '22',
+      game1: {
+        users: {
+          Tony: 44,
+          Tone: 27,
+          Tio: 77,
+        }
+      },
+      game2: {
+        users: {
+          Tony: 2,
+          Tone: 5,
+          Tio: 3,
+        }
+      }
     }
   )
 }
 
 function foidMax(){
   console.log("Running foidMax()")
-  firebase.database().ref('users/Foid').set(
-    {
-      message: 'Foid',
-      age: '3',
-    }
-  )
+  firebase.database().ref('game1/users/' +user).set(score)
 }
 
 function clearMessage() {
-  dbData = null;
+  firebase.database().ref('game1/users/').set()
 }
 
 function simpleRead() {
     console.log("Reading message");
-    firebase.database().ref('/users/Foid').child('message').once('value', display, fb_readError);
+    firebase.database().ref('game1/users').child('Tio').once('value', display, fb_readError);
     console.log("Leaving simpleRead")
 }
-function display(snapshot) {
-    console.log("Running display(), the message is: " + snapshot.val());
-    HTML_OUTPUT.innerHTML = snapshot.val();
+function fb_highScoreRead() {
+    console.log("Reading High Scores");
+    firebase.database().ref('/game1/users').once('value', displayHighScore, fb_readError);
+    console.log("Leaving simpleRead")
 }
+function displayHighScore(){
+    console.log();
+}
+function display(snapshot) {
+    var dbData = snapshot.val();
+    if (dbData == null) { // if there is no data, dbData will be null.
+        console.log('No message');
+    }
+    else {
+        console.log("Foid's message is: " + dbData)
+    }
+}
+
 
   function fb_readError(error) {
     console.log("There was an error reading the message");
