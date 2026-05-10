@@ -19,6 +19,10 @@ const HTML_OUTPUT = document.getElementById("databaseOutput");
 /**************************************************************/
 let user = 'Toe';
 let score = 99;
+let scoreObject = {
+  "Ozempic": 1,
+  "Oliver": 44
+}
 function bludMax(){
   console.log("Running bludMax()")
   firebase.database().ref('/').set(
@@ -54,14 +58,15 @@ function simpleRead() {
     console.log("Reading message");
     firebase.database().ref('game1/users').child('Tio').once('value', display, fb_readError);
     console.log("Leaving simpleRead")
+    console.log(scoreObject["Ozempic"])
 }
 function fb_highScoreRead() {
     console.log("Reading High Scores");
-    firebase.database().ref('/game1/users').once('value', displayHighScore, fb_readError);
-    console.log("Leaving simpleRead")
+    firebase.database().ref('/game1/users').once('value', fb_logDataBase, fb_readError);
+    console.log("Leaving highscore read")
 }
-function displayHighScore(){
-    console.log();
+function fb_logDataBase(snapshot){
+    console.log(snapshot.val());
 }
 function display(snapshot) {
     var dbData = snapshot.val();
