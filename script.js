@@ -27,6 +27,7 @@ function bludMax(){
   console.log("Running bludMax()")
   firebase.database().ref('/').set(
     {
+    highScores: {
       game1: {
         users: {
           Tony: 44,
@@ -42,46 +43,31 @@ function bludMax(){
         }
       }
     }
+    }
   )
 }
 
 function foidMax(){
   console.log("Running foidMax()")
-  firebase.database().ref('game1/users/' +user).set(score)
+  firebase.database().ref('highScores/game1/users/' +user).set(score)
 }
 
 function clearMessage() {
-  firebase.database().ref('game1/users/').set()
-}
-
-function simpleRead() {
-    console.log("Reading message");
-    firebase.database().ref('game1/users').child('Tio').once('value', display, fb_readError);
-    console.log("Leaving simpleRead")
-    console.log(scoreObject["Ozempic"])
+  firebase.database().ref('highScores/game1/users/').set()
 }
 function fb_highScoreRead() {
     console.log("Reading High Scores");
-    firebase.database().ref('/game1/users').once('value', fb_logDataBase, fb_readError);
+    firebase.database().ref('highScores/game1/users').orderByValue().limitToLast(3).once('value', fb_displayHighScores, fb_readError);
     console.log("Leaving highscore read")
 }
-function fb_logDataBase(snapshot){
-    console.log(snapshot.val());
+function fb_displayHighScores(snapshot){
+  snapshot.forEach(fb_showOneScore)
+  function fb_showOneScore(child){
+    console.log(child.key+" got "+ child.val()+" points");
+    HTML_OUTPUT.innerHTML = child.key+" got "+ child.val()+" points"
+  }
 }
-function display(snapshot) {
-    var dbData = snapshot.val();
-    if (dbData == null) { // if there is no data, dbData will be null.
-        console.log('No message');
-    }
-    else {
-        console.log("Foid's message is: " + dbData)
-    }
-}
-
-
   function fb_readError(error) {
     console.log("There was an error reading the message");
     console.error(error);
   }
-
-
