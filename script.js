@@ -64,10 +64,36 @@ function fb_displayHighScores(snapshot){
   snapshot.forEach(fb_showOneScore)
   function fb_showOneScore(child){
     console.log(child.key+" got "+ child.val()+" points");
-    HTML_OUTPUT.innerHTML = child.key+" got "+ child.val()+" points"
+    HTML_OUTPUT.innerHTML += child.key+" got "+ child.val()+" points"
   }
 }
   function fb_readError(error) {
     console.log("There was an error reading the message");
     console.error(error);
   }
+
+var GLOBAL_user;
+
+function fb_popupLogin() {
+  var provider = new firebase.auth.GoogleAuthProvider();
+
+  firebase.auth().signInWithPopup(provider).then((result) => {
+    GLOBAL_user = result.user;
+    console.log("User has logged in")
+  });
+}
+function fb_login() {
+    firebase.auth().onAuthStateChanged(LOGIN_CALLBACK);
+}
+function fb_handleLogin(_user) {
+    if (_user) {
+        console.log("User is logged in")
+        GLOBAL_user = _user;
+
+    } else {
+        console.log("User is NOT logged in - Starting the popup process")
+        fb_popupLogin();
+    }
+}
+
+
