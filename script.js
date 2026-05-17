@@ -59,6 +59,7 @@ function fb_highScoreRead() {
     console.log("Reading High Scores");
     firebase.database().ref('highScores/game1/users').orderByValue().limitToLast(3).once('value', fb_displayHighScores, fb_readError);
     console.log("Leaving highscore read")
+    HTML_OUTPUT.innerHTML = null;
 }
 function fb_displayHighScores(snapshot){
   snapshot.forEach(fb_showOneScore)
